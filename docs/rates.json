@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "status": "ok",
+  "source_url": "https://acuonline.mortgagewebcenter.com/responsive/#/ApplyNow",
+  "checked_at": "2026-11-24T13:48:52.376Z",
+  "products": {
+    "fixed_30": {
+      "rate_percent": 7.125,
+      "apr_percent": 7.298
+    },
+    "arm_1515": {
+      "rate_percent": 6.125,
+      "apr_percent": 6.276
+    }
+  }
+}
