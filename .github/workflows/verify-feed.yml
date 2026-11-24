@@ -1,0 +1,30 @@
+name: Verify public rate feed CORS (staging)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/verify-feed.yml']
+permissions:
+  contents: read
+jobs:
+  verify-public-feed:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Check public URL and browser cross-origin access header
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          url = 'https://raw.githubusercontent.com/siteops-workbench-26/web-rates-data/main/docs/rates.json'
+          origin = 'https://acuonline.web4cms.milestoneinternet.info'
+          request = urllib.request.Request(url, headers={'Origin': origin, 'Cache-Control': 'no-cache'})
+          with urllib.request.urlopen(request, timeout=20) as response:
+              cors = response.headers.get('Access-Control-Allow-Origin', '')
+              ctype = response.headers.get('Content-Type', '')
+              data = json.loads(response.read().decode('utf-8'))
+              print('HTTP', response.status, 'Content-Type', ctype, 'CORS', cors)
+          assert cors == '*' or cors == origin, 'Public JSON missing expected CORS allowance'
+          assert data.get('status') == 'ok' and data.get('schema_version') == 1
+          assert 'fixed_30' in data.get('products', {}) and 'arm_1515' in data['products']
+          print('PASS: cross-origin access and public rate feed shape')
+          PY
