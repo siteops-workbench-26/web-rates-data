@@ -1,0 +1,6 @@
+node_modules/
+site/
+docs/rates.json
+diagnostics/
+.env
+*.log
